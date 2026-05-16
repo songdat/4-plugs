@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Home Switch</title>
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#111827;
+    color:white;
+    text-align:center;
+}
+
+h1{
+    padding:20px;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+    padding:20px;
+}
+
+.card{
+    background:#1f2937;
+    padding:20px;
+    border-radius:20px;
+}
+
+button{
+    width:100%;
+    padding:20px;
+    border:none;
+    border-radius:15px;
+    font-size:20px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.on{
+    background:#22c55e;
+    color:white;
+}
+
+.off{
+    background:#ef4444;
+    color:white;
+}
+
+.status{
+    margin-top:10px;
+    font-size:18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🏠 Smart Home Control</h1>
+
+<div class="container">
+
+<div class="card">
+<h2>Switch 1</h2>
+<button class="on" onclick="sendMQTT('home/relay1','ON')">ON</button>
+<button class="off" onclick="sendMQTT('home/relay1','OFF')">OFF</button>
+<div class="status" id="s1">OFF</div>
+</div>
+
+<div class="card">
+<h2>Switch 2</h2>
+<button class="on" onclick="sendMQTT('home/relay2','ON')">ON</button>
+<button class="off" onclick="sendMQTT('home/relay2','OFF')">OFF</button>
+<div class="status" id="s2">OFF</div>
+</div>
+
+<div class="card">
+<h2>Switch 3</h2>
+<button class="on" onclick="sendMQTT('home/relay3','ON')">ON</button>
+<button class="off" onclick="sendMQTT('home/relay3','OFF')">OFF</button>
+<div class="status" id="s3">OFF</div>
+</div>
+
+<div class="card">
+<h2>Switch 4</h2>
+<button class="on" onclick="sendMQTT('home/relay4','ON')">ON</button>
+<button class="off" onclick="sendMQTT('home/relay4','OFF')">OFF</button>
+<div class="status" id="s4">OFF</div>
+</div>
+
+</div>
+
+<script>
+
+// ===== MQTT BROKER =====
+const broker = 'wss://broker.hivemq.com:8884/mqtt';
+
+const client = mqtt.connect(broker);
+
+client.on('connect', () => {
+
+    console.log("MQTT Connected");
+
+});
+
+function sendMQTT(topic,message){
+
+    client.publish(topic,message);
+
+    console.log(topic + " : " + message);
+
+    // Update UI
+    if(topic=="home/relay1"){
+        document.getElementById("s1").innerHTML=message;
+    }
+
+    if(topic=="home/relay2"){
+        document.getElementById("s2").innerHTML=message;
+    }
+
+    if(topic=="home/relay3"){
+        document.getElementById("s3").innerHTML=message;
+    }
+
+    if(topic=="home/relay4"){
+        document.getElementById("s4").innerHTML=message;
+    }
+
+}
+
+</script>
+
+</body>
+</html>
