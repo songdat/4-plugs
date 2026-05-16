@@ -2,9 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>Smart Home Switch</title>
+<title>Smart Home Timer</title>
 
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
@@ -13,7 +14,7 @@
 body{
     margin:0;
     font-family:Arial;
-    background:#111827;
+    background:#0f172a;
     color:white;
     text-align:center;
 }
@@ -24,39 +25,43 @@ h1{
 
 .container{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
     gap:20px;
     padding:20px;
 }
 
 .card{
-    background:#1f2937;
-    padding:20px;
+    background:#1e293b;
     border-radius:20px;
+    padding:20px;
 }
 
 button{
     width:100%;
-    padding:20px;
+    padding:15px;
+    margin-top:10px;
     border:none;
     border-radius:15px;
-    font-size:20px;
-    margin-top:10px;
+    font-size:18px;
+    color:white;
     cursor:pointer;
 }
 
 .on{
     background:#22c55e;
-    color:white;
 }
 
 .off{
     background:#ef4444;
-    color:white;
+}
+
+.timer{
+    background:#3b82f6;
 }
 
 .status{
-    margin-top:10px;
+    margin-top:15px;
     font-size:18px;
 }
 
@@ -69,72 +74,156 @@ button{
 
 <div class="container">
 
+<!-- PLUG 1 -->
 <div class="card">
-<h2>Switch 1</h2>
-<button class="on" onclick="sendMQTT('home/relay1','ON')">ON</button>
-<button class="off" onclick="sendMQTT('home/relay1','OFF')">OFF</button>
-<div class="status" id="s1">OFF</div>
+
+<h2>🔌 Plug 1</h2>
+
+<button class="on"
+onclick="sendMQTT('room/fan1','ON',1)">
+ON
+</button>
+
+<button class="off"
+onclick="sendMQTT('room/fan1','OFF',1)">
+OFF
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan1','TIMER_30',1)">
+⏰ 30 MIN
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan1','TIMER_60',1)">
+⏰ 1 HOUR
+</button>
+
+<div class="status" id="s1">
+READY
 </div>
 
-<div class="card">
-<h2>Switch 2</h2>
-<button class="on" onclick="sendMQTT('home/relay2','ON')">ON</button>
-<button class="off" onclick="sendMQTT('home/relay2','OFF')">OFF</button>
-<div class="status" id="s2">OFF</div>
 </div>
 
+<!-- PLUG 2 -->
 <div class="card">
-<h2>Switch 3</h2>
-<button class="on" onclick="sendMQTT('home/relay3','ON')">ON</button>
-<button class="off" onclick="sendMQTT('home/relay3','OFF')">OFF</button>
-<div class="status" id="s3">OFF</div>
+
+<h2>🔌 Plug 2</h2>
+
+<button class="on"
+onclick="sendMQTT('room/fan2','ON',2)">
+ON
+</button>
+
+<button class="off"
+onclick="sendMQTT('room/fan2','OFF',2)">
+OFF
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan2','TIMER_30',2)">
+⏰ 30 MIN
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan2','TIMER_60',2)">
+⏰ 1 HOUR
+</button>
+
+<div class="status" id="s2">
+READY
 </div>
 
+</div>
+
+<!-- PLUG 3 -->
 <div class="card">
-<h2>Switch 4</h2>
-<button class="on" onclick="sendMQTT('home/relay4','ON')">ON</button>
-<button class="off" onclick="sendMQTT('home/relay4','OFF')">OFF</button>
-<div class="status" id="s4">OFF</div>
+
+<h2>🔌 Plug 3</h2>
+
+<button class="on"
+onclick="sendMQTT('room/fan3','ON',3)">
+ON
+</button>
+
+<button class="off"
+onclick="sendMQTT('room/fan3','OFF',3)">
+OFF
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan3','TIMER_30',3)">
+⏰ 30 MIN
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan3','TIMER_60',3)">
+⏰ 1 HOUR
+</button>
+
+<div class="status" id="s3">
+READY
+</div>
+
+</div>
+
+<!-- PLUG 4 -->
+<div class="card">
+
+<h2>🔌 Plug 4</h2>
+
+<button class="on"
+onclick="sendMQTT('room/fan4','ON',4)">
+ON
+</button>
+
+<button class="off"
+onclick="sendMQTT('room/fan4','OFF',4)">
+OFF
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan4','TIMER_30',4)">
+⏰ 30 MIN
+</button>
+
+<button class="timer"
+onclick="sendMQTT('room/fan4','TIMER_60',4)">
+⏰ 1 HOUR
+</button>
+
+<div class="status" id="s4">
+READY
+</div>
+
 </div>
 
 </div>
 
 <script>
 
-// ===== MQTT BROKER =====
-const broker = 'wss://broker.hivemq.com:8884/mqtt';
+// ================= MQTT =================
+
+const broker =
+'wss://broker.hivemq.com:8884/mqtt';
 
 const client = mqtt.connect(broker);
 
-client.on('connect', () => {
+client.on('connect', ()=>{
 
     console.log("MQTT Connected");
-
 });
 
-function sendMQTT(topic,message){
+// ================= SEND MQTT =================
+
+function sendMQTT(topic,message,id){
 
     client.publish(topic,message);
 
-    console.log(topic + " : " + message);
+    console.log(topic + ":" + message);
 
-    // Update UI
-    if(topic=="home/relay1"){
-        document.getElementById("s1").innerHTML=message;
-    }
-
-    if(topic=="home/relay2"){
-        document.getElementById("s2").innerHTML=message;
-    }
-
-    if(topic=="home/relay3"){
-        document.getElementById("s3").innerHTML=message;
-    }
-
-    if(topic=="home/relay4"){
-        document.getElementById("s4").innerHTML=message;
-    }
-
+    document.getElementById("s"+id)
+    .innerHTML = message;
 }
 
 </script>
